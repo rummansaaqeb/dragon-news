@@ -1,71 +1,68 @@
-import React from "react";
-import { FaRegEye, FaShareAlt, FaStar } from "react-icons/fa";
+import { FaShareAlt, FaRegEye } from "react-icons/fa";
+import { AiFillStar } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
-const NewsCard = ({ news }) => {
-  const {
-    author,
-    title,
-    thumbnail_url,
-    details,
-    total_view,
-    rating,
-  } = news;
+const NewsCard = (props = {}) => {
+  const { news } = props || {};
 
   return (
-    <div className="card bg-white shadow-xl rounded-lg border border-gray-200 mb-8 hover:scale-105 transition">
-      <div className="card-body">
-        {/* Author Info */}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <img
-              src={author.img}
-              alt={author.name}
-              className="w-10 h-10 rounded-full"
+    <div className=" p-4 bg-white rounded-lg shadow-md">
+      {/* Author Information */}
+      <div className="flex items-center mb-4">
+        <img
+          src={news.author.img}
+          alt={news.author.name}
+          className="w-10 h-10 rounded-full mr-3"
+        />
+        <div>
+          <p className="font-semibold">{news.author.name}</p>
+          <p className="text-sm text-gray-500">{news.author.published_date}</p>
+        </div>
+        <div className="ml-auto">
+          <FaShareAlt className="text-gray-600" />
+        </div>
+      </div>
+
+      {/* Title */}
+      <h2 className="text-xl font-semibold mb-2">{news.title}</h2>
+
+      {/* Thumbnail Image */}
+      <img
+        src={news.image_url}
+        alt="Thumbnail"
+        className="w-full  object-cover rounded-lg mb-4"
+      />
+
+      {/* Details */}
+      <p className="text-gray-700 text-sm mb-4">
+        {news.details.slice(0, 150)}...{" "}
+        <Link to={`/news/${news._id}`} className="text-primary">
+          Read More
+        </Link>
+      </p>
+
+      {/* Ratings and Views */}
+      <div className="flex items-center justify-between text-gray-600 text-sm">
+        {/* Rating */}
+        <div className="flex items-center">
+          {[...Array(5)].map((_, i) => (
+            <AiFillStar
+              key={i}
+              className={`text-yellow-500 ${
+                i < Math.round(news.rating.number) ? "" : "opacity-50"
+              }`}
             />
-            <div className="ml-3">
-              <h3 className="font-semibold text-sm">{author.name}</h3>
-              <p className="text-gray-500 text-xs">{author.published_date}</p>
-            </div>
-          </div>
-          <FaShareAlt className="text-gray-400 cursor-pointer" />
+          ))}
+          <span className="ml-2 font-semibold">{news.rating.number}</span>
         </div>
 
-        {/* Title */}
-        <h2 className="font-bold text-lg mt-3">{title}</h2>
-
-        {/* Thumbnail */}
-        <figure className="my-3">
-          <img
-            src={thumbnail_url}
-            alt="News Thumbnail"
-            className="w-full object-cover rounded-lg mb-4"
-          />
-        </figure>
-
-        {/* Details */}
-        <p className="text-gray-600 text-sm">
-          {details.length > 100
-            ? `${details.slice(0, 100)}...`
-            : details}{" "}
-          <span className="text-blue-500 font-medium cursor-pointer">
-            Read More
-          </span>
-        </p>
-
-        {/* Footer */}
-        <div className="card-actions justify-between items-center mt-3">
-          <div className="flex items-center text-yellow-500">
-            <FaStar className="mr-1" />
-            <span>{rating.number}</span>
-          </div>
-          <div className="flex items-center text-gray-500">
-            <FaRegEye className="mr-1" />
-            <span>{total_view}</span>
-          </div>
+        {/* Views */}
+        <div className="flex items-center">
+          <FaRegEye className="mr-1" />
+          <span>{news.total_view}</span>
         </div>
       </div>
     </div>
   );
 };
-
 export default NewsCard;
